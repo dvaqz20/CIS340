@@ -4,6 +4,29 @@ import { Text, TextInput, View, StyleSheet } from 'react-native';
 
 // Functional component named WordConvertor
 export default function WordConvertor() {
+  const [text, setText] = useState('');
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>Enter a word:</Text>
+      
+      <TextInput
+        style={styles.input}
+        placeholder="Type something here..."
+        onChangeText={(text) => setText(text)} // Update the state with the new text
+      />
+
+      <Text style={styles.output}>
+        {
+          text
+            .trim()
+            .split(' ')
+            .map((word) => (word ? '*' : ''))
+            .join(' ') 
+        }
+      </Text>
+    </View>
+  );
 }
 
 // Styling using StyleSheet for clean, reusable styles
