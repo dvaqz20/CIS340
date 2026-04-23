@@ -4,6 +4,31 @@ import { StyleSheet, Text, View } from 'react-native';
 
 // Main component of the app
 export default function App() {
+
+  return (
+
+    <View style={styles.container}>
+
+      <Text style={styles.blueText}>
+        Just blue text
+      </Text>
+
+      <Text style={styles.largeGreenText}>
+        This is big green
+      </Text>
+
+      <Text style={[styles.blueText, styles.largeGreenText]}>
+        Blue text, then the big green text
+      </Text>
+
+      <Text style={[styles.largeGreenText, styles.blueText]}>
+        Large green text, then the blue text
+      </Text>
+
+    </View>
+
+  );
+
 }
 
 // Creating a StyleSheet for reusable and clean styling

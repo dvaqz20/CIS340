@@ -9,6 +9,61 @@ export default function App() {
       Heads: 'https://raw.githubusercontent.com/AbdunabiRamadan/CIS340-Images/main/images/heads.jpg',
       Tails: 'https://raw.githubusercontent.com/AbdunabiRamadan/CIS340-Images/main/images/tails.jpg',
     };
+
+ const [coinResult, setCoinResult] = useState('Heads'); 
+ 
+ const [countdown, setCountdown] = useState(null);
+ 
+ const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+ // Function to start the countdown and flip the coin
+function flipCoinWithCountdown() {
+  let counter = 3;
+
+  setCountdown(counter);
+  setIsButtonDisabled(true);
+
+  const countdownInterval = setInterval(() => {
+    counter = counter - 1;
+    setCountdown(counter);
+
+    if (counter === 0) {
+      clearInterval(countdownInterval);
+      const result = Math.random() > 0.5 ? 'Heads' : 'Tails';
+
+      setCoinResult(result);
+      setCountdown(null);
+      setIsButtonDisabled(false);
+    }
+  }, 500);
+}
+
+return (
+  <View style={styles.container}>
+    {countdown === null && (
+      <Text style={[styles.resultText, { color: coinResult === 'Heads' ? '#007AFF' : '#FF9500' }]}>
+        {coinResult}
+      </Text>
+    )}
+
+    {countdown !== null ? (
+      <Text style={styles.countdownText}>{countdown}</Text>
+    ) : (
+      <Image 
+        source={{ uri: images[coinResult] }} 
+        style={styles.coinImage}
+      />
+    )}
+
+    <View style={styles.buttonWrapper}>
+      <Button 
+        title="Flip Coin"
+        onPress={flipCoinWithCountdown}
+        disabled={isButtonDisabled}
+      />
+    </View>
+  </View>
+);
 }
 
 // Styles for the app

@@ -13,6 +13,31 @@ export default function App() {
     5: 'https://raw.githubusercontent.com/AbdunabiRamadan/CIS340-Images/main/images/dice5.jpg',
     6: 'https://raw.githubusercontent.com/AbdunabiRamadan/CIS340-Images/main/images/dice6.jpg',
   };
+
+  const [diceNumber, setDiceNumber] = useState(1);
+  
+   // Function to generate a random number between 1 and 6 to update the state
+   function rollDice() {
+    const randomNumber = Math.floor(Math.random() * 6) + 1;
+    setDiceNumber(randomNumber);
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Dice Roller</Text>
+
+      <Image
+        source={{ uri: diceImages[diceNumber]}}
+        style={styles.diceImage}
+      />
+
+      <Text style={styles.diceNumber}>You rolled: {diceNumber}</Text>
+
+      <View style={styles.buttonContainer}>
+        <Button title="Roll Dice" onPress={rollDice} />
+      </View>
+    </View>
+  );
 }
 
 // Styles for the app
