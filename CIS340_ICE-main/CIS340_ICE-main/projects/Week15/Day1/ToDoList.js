@@ -11,6 +11,62 @@ import {
 
 // Main App component
 export default function App() {
+
+const [taskInput, setTaskInput] = useState('');
+const [tasksList, setTaskList] = useState([]);
+
+function addTask() {
+
+  if (taskInput.trim()){
+
+    const updatedList = [...tasksList, taskInput];
+    setTaskList(updatedList);
+
+    setTaskInput('');
+    }
+  }
+
+function deleteTask(indexToDelete) {
+
+  const updatedList = [...tasksList];
+
+  updatedList.splice(indexToDelete, 1);
+
+  setTaskList(updatedList); // Update the state to reflect the deletion
+}
+
+  return (
+
+    <View style={styles.container}>
+      
+      <TextInput 
+      style={styles.input}
+      placeholder='Enter a task'
+      value={taskInput} // Correctly bind the state
+      onChangeText={(text) => setTaskInput(text)} // Simplified the function
+      />  
+
+      <Button title='Add Task' onPress={addTask} />
+
+      <FlatList
+      data={tasksList}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({item, index}) => (
+          <View style={styles.taskContainer}>
+            <Text style={styles.taskText}>{item}</Text>
+
+            <Button 
+            title='Delete' 
+            onPress={() => deleteTask(index)}
+            />
+
+          </View>
+        )}
+      />
+
+
+    </View>
+  );
 }
 
 // Styles used in the app

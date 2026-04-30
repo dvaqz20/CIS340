@@ -7,6 +7,81 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Sharing from 'expo-sharing';
 
 export default function App() {
+  const img = { uri: 'https://raw.githubusercontent.com/AnanthIyerKrishnan/CIS340/master/images/logo.png' };
+
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  //function to ope the image library
+  async function openImagePicker() {
+
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert("Permission required", "You need to allow access to selece images.");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (pickerResult.canceled) {
+      return;
+    }
+
+    let imageUri = pickerResult.assets[0].uri;
+    setSelectedImage({ localUri : imageUri});
+  }
+
+  async function shareImage() {
+  
+    if (!selectedImage) {
+      Alert.alert("No image", "Please pick an image first");
+      return;
+  }
+
+  let canShare = await Sharing.isAvailableAsync();
+
+  if (!canShare) {
+    Alert.alert("Sharing not supported", "Sharing is not available on this device");
+    return;
+  }
+
+  await Sharing.shareAsync(selectedImage.localUri);
+
+  }
+
+  //Main Screen UI
+
+  return(
+    <View style={styles.container}>
+
+    {selectedImage ? (
+      <View style={{ alignItems: 'center'}}>
+      <Image source={{ uri: selectedImage.localUri }} style={styles.selectedImage} />
+      <TouchableOpacity onPress={shareImage} style={styles.button}>
+        <Text style={styles.buttonText}>Share this photo</Text>
+      </TouchableOpacity>
+      </View>
+    ) : ( //if no image is selected
+      <View style={{ alignItems: 'center'}}>
+        <Image
+          source={img}
+          style={styles.logo}
+        />
+          <Text style={styles.instructions}>
+            Press button below to select an image from your phone
+            </Text>
+
+          <TouchableOpacity onPress={openImagePicker} style={styles.button}>
+          <Text style={styles.buttonText}>Pick image</Text>
+          </TouchableOpacity>
+
+          </View>
+    )}
+    </View>
+ )
 }
 
 // Style definitions

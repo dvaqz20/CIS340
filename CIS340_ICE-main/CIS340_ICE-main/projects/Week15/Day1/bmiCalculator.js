@@ -13,6 +13,70 @@ import {
 
 // Main app component
 export default function App() {
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [bmi, setBmi] = useState(null);
+  const [category, setCategory] = useState('');
+
+  function calculateBMI() {
+    if (weight && height) {
+      const weightInKg = parseFloat(weight);
+      const heightInMeters = parseFloat(height) / 100; // Convert cm to meters
+
+      const calculatedBMI = weightInKg / (heightInMeters * heightInMeters);
+      const roundedBMI = calculatedBMI.toFixed(2);
+
+      setBmi(roundedBMI);
+      determineCategory(calculatedBMI);
+    }
+  }
+
+  function determineCategory(bmiValue) {
+    const bmi = parseFloat(bmiValue);
+
+    if (bmi < 18.5) {
+      setCategory('Underweight');
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      setCategory('Normal weight');
+    } else if (bmi >= 25 && bmi < 29.9) {
+      setCategory('Overweight');
+    } else {
+      setCategory('Obese');
+    }
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter weight (kg)"
+          keyboardType="numeric"
+          onChangeText={(value) => setWeight(value)}
+          value={weight}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter height (cm)"
+          keyboardType="numeric"
+          onChangeText={(value) => setHeight(value)}
+          value={height}
+        />
+
+        <View style={styles.buttonWrapper}>
+          <Button title="Calculate BMI" onPress={calculateBMI} />
+        </View>
+
+        {bmi && (
+          <View style={styles.resultBox}>
+            <Text style={styles.bmiText}>Your BMI: {bmi}</Text>
+            <Text style={styles.categoryText}>Category: {category}</Text>
+          </View>
+        )}
+      </ScrollView>
+    </TouchableWithoutFeedback>
+  );
 }
 
 // Styles used in the app
