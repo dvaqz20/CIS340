@@ -21,7 +21,7 @@ export default function App() {
   function calculateBMI() {
     if (weight && height) {
       const weightInKg = parseFloat(weight);
-      const heightInMeters = parseFloat(height) / 100; // Convert cm to meters
+      const heightInMeters = parseFloat(height) / 100; 
 
       const calculatedBMI = weightInKg / (heightInMeters * heightInMeters);
       const roundedBMI = calculatedBMI.toFixed(2);

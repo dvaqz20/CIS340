@@ -37,7 +37,7 @@ export default function StatesApp() {
       let cities = text 
       .split("\n")
       .map((c) => c.trim())
-      .filter((C) => c !== "")
+      .filter((c) => c !== "")
       .sort();
 
       let groups = {};
@@ -61,7 +61,7 @@ export default function StatesApp() {
       setSections(formatted);
     })
     .catch((error) => {
-      connsole.error(error);
+      console.error(error);
       Alert.alert("Error", "Could not fetch the file");
     })
     .finally(() => {

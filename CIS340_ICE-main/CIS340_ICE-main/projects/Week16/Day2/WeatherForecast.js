@@ -1,13 +1,82 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TextInput, Image } from "react-native";
 
-// Keep imports for teaching/demo purposes
 import Forecast from "./Forecast";
-import OpenWeatherMap from "./open_weather_map";  
+import OpenWeatherMap from "./open_weather_map";
 
 class WeatherForecast extends Component {
+  constructor(props) {
+    super(props); 
+    this.state = { zip: "", forecast: null };
+  }
+
+
+  _hndleTextChange = event => {
+    let zip = event.nativeEvent.text;
+    OpenWeatherMap.fetchForecast(zip).then(forecast => {
+      this.setState({ forecast: forecast });
+    });
+  };
+
   render() {
-    return <View style={styles.container} />;
+    let content = null;
+
+    if (this.state.forecast !== null) {
+      content = (
+        <Forecast
+          main={this.state.forecast.main}
+          description={this.state.forecast.description}
+          temp={this.state.forecast.temp}
+          feels_like={this.state.forecast.feels_like}
+          temp_min={this.state.forecast.temp_min}
+          temp_max={this.state.forecast.temp_max}
+          humidity={this.state.forecast.humidity}
+          wind_speed={this.state.forecast.wind_speed}
+          wind_deg={this.state.forecast.wind_deg}
+          pressure={this.state.forecast.pressure}
+          visibility={this.state.forecast.visibility}
+          sunrise={this.state.forecast.sunrise}
+          sunset={this.state.forecast.sunset}
+          city={this.state.forecast.city}
+          country={this.state.forecast.country}
+          icon={this.state.forecast.icon}
+        />
+      );
+    }
+
+    return (
+      <View style={styles.container}>
+        {/* Background sky image */}
+        <Image
+          source={require('../../../assets/sky.jpg')}
+          resizeMode="cover"
+          style={styles.backdrop}
+        />
+
+        {/* Semi-transparent overlay that holds all the text and input */}
+        <View style={styles.overlay}>
+
+          {/* Row that places the label and zip code input side by side */}
+          <View style={styles.row}>
+            <Text style={styles.mainText}>
+              Current Weather For:{'\n'}
+            </Text>
+
+            {/* Container for the zip code text input — uses underline border style */}
+            <View style={styles.zipContainer}>
+              <TextInput
+                style={[styles.zipCode, styles.mainText]}
+                onSubmitEditing={this._hndleTextChange}
+                underlineColorAndroid="transparent"
+              />
+            </View>
+          </View>
+
+          {/* Renders the Forecast component here once data is available */}
+          {content}
+        </View>
+      </View>
+    );
   }
 }
 
@@ -20,6 +89,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     backgroundColor: "#000000"
   },
+
   backdrop: {
     width: 500,
     height: 200,
@@ -27,29 +97,34 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 10
   },
+
   overlay: {
     paddingTop: 5,
     opacity: 0.5,
     flexDirection: "column",
     alignItems: "center"
   },
+
   row: {
     flexDirection: "row",
     flexWrap: "nowrap",
     alignItems: "flex-start",
     padding: 30
   },
+
   zipContainer: {
     height: baseFontSize + 10,
     borderBottomColor: "#FFFAF0",
     borderBottomWidth: 3,
     marginLeft: 18
   },
+
   zipCode: {
     flex: 1,
     width: 100,
     height: baseFontSize
   },
+
   mainText: {
     fontSize: baseFontSize,
     color: "#FFFAF0"
